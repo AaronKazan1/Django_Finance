@@ -1,0 +1,41 @@
+{% extends "hub/base.html" %}
+
+{% block body %}
+
+    <center>
+        <h1>Customer Search</h1>
+        <form method='GET' action=''>
+            <div class="form-group">
+                <input type="text" name='name' value='{{ name }}'
+                class="form-control input-large">
+            </div>
+            <button type="submit" class="btn btn-success">Submit</button>
+        </form>
+
+    {% if name %}
+        <hr>
+        <h3>Results for "<strong>{{ name }}</strong>"</h3>
+        <br>
+        <table class="table table-hover">
+            <thead>
+                <tr>
+                    <th>Name</th>
+                    <th>Customer IDs</th>
+                    <th>Similarity</th>
+                </tr>
+            </thead>
+
+            {% for customer in res %}
+                <tr>
+                    <td>{{ customer.name }}</td>
+                    <td>{% for i in customer.customerid_set.all %}{{ i }},{% endfor %}</td>
+                    <td>{{ customer.sml }}</td>
+                </tr>
+            {% endfor %}
+        </table>
+
+    {% endif %}
+
+    </center>
+
+{% endblock %}

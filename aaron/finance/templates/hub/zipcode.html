@@ -1,0 +1,136 @@
+{% extends "hub/base.html" %}
+{% load staticfiles %}
+{% load tools %}
+
+{% block head %}
+  <script src="https://maps.google.com/maps/api/js?sensor=false"
+          type="text/javascript"></script>
+{% endblock %}
+
+{% block body %}
+
+  <div class="container">
+    <hr><center>
+    <h3>Zipcode Search</h3>
+    <div class="row">
+      <form method='GET' action=''>
+        <div class="form-group">
+          <input type="text" name='zipcode' value='{{ zipcode }}'
+            class="form-control input-large">
+        </div>
+      </form>
+    </div>
+    </center>
+
+    {% if zipcode %}
+    <hr>
+    <div id="map" style="width: 100%; height: 400px;"></div>
+    <hr>
+
+    <!-- pagination -->
+    <center>
+      <nav>
+        <ul class="pager">
+          {% if locations.has_previous %}
+              <li><a href="?page={{ locations.previous_page_number }}&zipcode={{ zipcode }}"><span aria-hidden="true">&larr;</span> previous</a></li>
+          {% endif %}
+
+          {% if locations.has_next %}
+              <li><a href="?page={{ locations.next_page_number }}&zipcode={{ zipcode }}">next <span aria-hidden="true">&rarr;</span></a></li>
+          {% endif %}
+        </ul>
+      </nav>
+    </center>
+
+    <table class="table table-hover">
+      <thead>
+        <tr>
+          <th></th>
+          <th></th>
+          <th></th>
+        </tr>
+      </thead>
+      <tbody>
+        {% for location in locations %}
+        <tr>
+
+          <td>
+            <h4><a href='/locations/{{ location.br_location_id }}'>{{ location.address }}, {{ location.city }}, {{ location.state }}</a></h4>
+          </td>
+
+          <td>
+            <h4><a href='/suppliers/{{ location.supplier.br_supplier_id }}'>{{ location.supplier.name }}</a></h4>
+          </td>
+
+          <td>
+            <h4><span class="label label-primary">
+                <span class="glyphicon glyphicon-stats" aria-hidden="true"></span>
+              {{ location.num_ratings }}
+            </span></h4>
+          </td>
+
+        </tr>
+        {% endfor %}
+      </tbody>
+    </table>
+
+    <!-- pagination -->
+    <center>
+      <nav>
+        <ul class="pager">
+          {% if locations.has_previous %}
+              <li><a href="?page={{ locations.previous_page_number }}&zipcode={{ zipcode }}"><span aria-hidden="true">&larr;</span> previous</a></li>
+          {% endif %}
+
+          {% if locations.has_next %}
+              <li><a href="?page={{ locations.next_page_number }}&zipcode={{ zipcode }}">next <span aria-hidden="true">&rarr;</span></a></li>
+          {% endif %}
+        </ul>
+      </nav>
+      <p>Page {{ locations.number }} of {{ locations.paginator.num_pages }}.</p>
+    </center>
+  </div>
+  {% endif %}
+
+{% endblock %}
+
+
+{% block foot %}
+  <script type="text/javascript">
+
+    var locations = [
+      {% for location in locations %}
+        ['<a href="/locations/{{ location.br_location_id }}"><b>{{ location.supplier.name }}</b><br>{{ location.address }}, {{ location.city }}, {{ location.state }}</a>', {{ location.latitude }}, {{ location.longitude }}],
+      {% endfor %}
+    ];
+
+    var map = new google.maps.Map(document.getElementById('map'), {
+      zoom: 7,
+      center: new google.maps.LatLng({{ z.location.get_coords.1 }}, {{ z.location.get_coords.0 }}),
+      mapTypeId: google.maps.MapTypeId.ROADMAP,
+      streetViewControl: false
+    });
+
+    var markers = new Array();
+
+    for (i = 0; i < locations.length; i++) {
+
+      var infowindow = new google.maps.InfoWindow();
+
+      var marker = new google.maps.Marker({
+        position: new google.maps.LatLng(locations[i][1], locations[i][2]),
+        map: map
+      });
+
+      markers.push(marker);
+
+      google.maps.event.addListener(marker, 'click', (function(marker, i) {
+        return function() {
+          infowindow.setContent(locations[i][0]);
+          infowindow.open(map, marker);
+        }
+      })(marker, i));
+
+    }
+  </script>
+{% endblock %}
