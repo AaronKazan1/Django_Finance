@@ -126,7 +126,7 @@ class Command(BaseCommand):
                        "Accept": "text/plain"}
             data={'xmlrequest':api_request}
             r=requests.post(api_url,data=data,headers=headers)
-            file=open(docparid+'.csv','w', encoding='utf8')
+            file=open(docparid+'.csv','w')
             file.write(r.text)
             file.close()
         class Customer(object):
