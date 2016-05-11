@@ -178,5 +178,5 @@ class Command(BaseCommand):
             matches=custObjects[i].calculatePastDue()
             for k in range(len(matches)):
                 ws.append([matches[k][0][1],matches[k][0][4],matches[k][0][0],matches[k][0][2],matches[k][1],matches[k][0][3]])
-        os.chdir('C:\\Users\\akazan\\Documents')
+        #os.chdir('C:\\Users\\akazan\\Documents')
         wb.save('DN.xlsx')
