@@ -1,7 +1,12 @@
 from django.core.management.base import BaseCommand, CommandError
 from django.conf import settings
 
-import requests, datetime, csv, openpyxl, os
+import base64
+import os
+
+from django.core.mail import EmailMessage
+
+import requests, datetime, csv, openpyxl
 
 class Command(BaseCommand):
 
@@ -183,19 +188,22 @@ class Command(BaseCommand):
 
         def send_mail_w_attachment(to, subject, message, attachment_path,
                            mimetype='application/octet-stream', fail_silently=False):
-        """
-        :param to: a list of email addresses
-        :param subject: a string
-        :param message: a string
-        :param attachment_path: full path to attachment fil
-        """
-        email = EmailMessage('TEST', 'AARON', to='akazan1@gmail.com')
-        attachment_path='/home/akazan/django_finance/aaron/DN.xlsx'
-        # Load file and Base64 encode
-        file_name = os.path.basename(attachment_path)
-        data = open(attachment_path, 'rb').read()
-        encoded = base64.b64encode(data)
-        email.attach(file_name, encoded, mimetype=mimetype)
+            """
+            :param to: a list of email addresses
+            :param subject: a string
+            :param message: a string
+            :param attachment_path: full path to attachment fil
+            """
+            email = EmailMessage('TEST', 'AARON', to='akazan1@gmail.com')
+            attachment_path='/home/akazan/django_finance/aaron/DN.xlsx'
+            # Load file and Base64 encode
+            file_name = os.path.basename(attachment_path)
+            data = open(attachment_path, 'rb').read()
+            encoded = base64.b64encode(data)
+            email.attach(file_name, encoded, mimetype=mimetype)
 
-        # Send it
-        email.send(fail_silently=fail_silently)
+            # Send it
+            email.send(fail_silently=fail_silently)
+
+        send_mail_w_attachment('akazan1@gmail.com', 'subject', 'message', '/home/akazan/django_finance/aaron/DN.xlsx',
+                           mimetype='application/octet-stream', fail_silently=False)
