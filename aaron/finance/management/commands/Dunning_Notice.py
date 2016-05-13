@@ -180,3 +180,22 @@ class Command(BaseCommand):
                 ws.append([matches[k][0][1],matches[k][0][4],matches[k][0][0],matches[k][0][2],matches[k][1],matches[k][0][3]])
         #os.chdir('C:\\Users\\akazan\\Documents')
         wb.save('DN.xlsx')
+
+        def send_mail_w_attachment(to, subject, message, attachment_path,
+                           mimetype='application/octet-stream', fail_silently=False):
+        """
+        :param to: a list of email addresses
+        :param subject: a string
+        :param message: a string
+        :param attachment_path: full path to attachment fil
+        """
+        email = EmailMessage('TEST', 'AARON', to='akazan1@gmail.com')
+        attachment_path='/home/akazan/django_finance/aaron/DN.xlsx'
+        # Load file and Base64 encode
+        file_name = os.path.basename(attachment_path)
+        data = open(attachment_path, 'rb').read()
+        encoded = base64.b64encode(data)
+        email.attach(file_name, encoded, mimetype=mimetype)
+
+        # Send it
+        email.send(fail_silently=fail_silently)
