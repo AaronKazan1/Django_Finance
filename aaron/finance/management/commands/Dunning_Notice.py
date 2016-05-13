@@ -205,5 +205,5 @@ class Command(BaseCommand):
             # Send it
             email.send(fail_silently=fail_silently)
 
-        send_mail_w_attachment('akazan1@gmail.com', 'subject', 'message', '/home/akazan/django_finance/aaron/DN.xlsx',
+        send_mail_w_attachment(['akazan1@gmail.com'], 'subject', 'message', '/home/akazan/django_finance/aaron/DN.xlsx',
                            mimetype='application/octet-stream', fail_silently=False)
