@@ -194,7 +194,7 @@ class Command(BaseCommand):
             :param message: a string
             :param attachment_path: full path to attachment fil
             """
-            email = EmailMessage('TEST', 'AARON', to='akazan1@gmail.com')
+            email = EmailMessage('TEST', 'AARON', to=['akazan1@gmail.com'])
             attachment_path='/home/akazan/django_finance/aaron/DN.xlsx'
             # Load file and Base64 encode
             file_name = os.path.basename(attachment_path)
